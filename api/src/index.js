@@ -23,8 +23,10 @@ app.get('/', async (req, res) => {
 // Use the routes
 app.use('/api', routes)
 
-app.listen(port, () => {
-  console.log(`Backend listening at http://localhost:${port}`)
-})
+if (!module.parent || module.parent.filename.includes('index.spec.js')) {
+  app.listen(port, () => {
+    console.log(`Backend listening at http://localhost:${port}`)
+  })
+}
 
 module.exports = app

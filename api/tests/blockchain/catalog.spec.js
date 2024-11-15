@@ -2,9 +2,8 @@ const { thorify } = require('thorify')
 const Web3 = require('web3')
 const mockDate = require('mockdate')
 const { waitForThor } = require('../utils')
-// const { deploy } = require('../../blockchain/deploy')
 const hre = require('hardhat')
-const testData = require('./deploy-hardhat.data')
+const testData = require('./catalog.data')
 
 describe('Contract Deployment', () => {
   let web3
@@ -14,7 +13,6 @@ describe('Contract Deployment', () => {
   beforeAll(async () => {
     mockDate.set('2024-07-09T00:17:00.000Z')
     await hre.network.provider.send('evm_setNextBlockTimestamp', [new Date('2033-05-18T03:33:00.000Z').getTime() / 1000])
-    // await hre.network.provider.send('evm_mine')
     await hre.run('compile')
     web3 = thorify(new Web3(), process.env.THOR_URL || 'http://localhost:8669')
     await waitForThor(web3)
@@ -37,7 +35,6 @@ describe('Contract Deployment', () => {
     const { expects, inputs } = testData.createProduct.success
     await catalogContract.createProduct(...inputs.addProduct)
     const product = await catalogContract.products(0)
-    console.debug('product: ', product)
     expect(product).toMatchObject(expects.product)
   }, 60000)
 
@@ -53,7 +50,6 @@ describe('Contract Deployment', () => {
   it('should have retrieve catalog with address', async () => {
     const { expects, inserts } = testData.getCatalog.success
     const newCatalogContract = await Catalog.deploy(...inserts.catalog)
-    console.debug('newCatalogContract: ', newCatalogContract.address)
     const retrivedCatalog = await Catalog.attach(newCatalogContract.address)
     expect(await retrivedCatalog.catalogName()).toBe(expects.catalogName)
   }, 60000)
@@ -62,10 +58,6 @@ describe('Contract Deployment', () => {
     const { expects, inputs } = testData.createOrder.success
     await catalogContract.createOrder(...inputs.createOrder)
     const order = await catalogContract.orders(0)
-    // console.debug('order: ', order)
-    // console.debug('expects: ', expects.order)
-    // console.debug(new Date('2033-05-18T03:33:28.000Z').getTime() / 1000)
-    // console.debug('date: ', new Date(order.date.toNumber() * 1000).toISOString())
     expect(order).toMatchObject(expects.order)
 
     const orderGotByOrderNumber = await catalogContract.getOrderByOrderNumber(1)
