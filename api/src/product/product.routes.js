@@ -1,14 +1,11 @@
 const express = require('express')
-const router = express.Router()
+const router = express.Router({ mergeParams: true })
 const productController = require('./product.controller')
 
-// Create a new product
-router.post('/', productController.createProduct)
-
 // Get a product by ID
-router.get('/:id', productController.getProduct)
+router.get('/:sku', productController.getBySku)
 
 // Update a product
-router.put('/:id', productController.updateProduct)
+router.put('/:sku', productController.put)
 
 module.exports = router

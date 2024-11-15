@@ -1,19 +1,10 @@
-exports.post = {
-  success: {
-    inputs: {
-      newProduct: {
-        name: 'Test Product',
-        price: 100,
-        description: 'A test product',
-        unitOfMeasure: 'piece'
-      }
-    },
-    expects: {
-      success: true,
-      txId: 'mock_txid'
-    },
-    mocks: {
-      txid: 'mock_txid'
+exports.beforeAll = {
+  inserts: {
+    catalog: {
+      supplier: {
+        name: 'Test Supplier'
+      },
+      name: 'Test Catalog'
     }
   }
 }
@@ -21,37 +12,51 @@ exports.post = {
 exports.put = {
   success: {
     inputs: {
-      updatedProduct: {
-        name: 'Updated Product',
-        price: 200,
-        description: 'An updated test product',
-        unitOfMeasure: 'kg'
-      }
+      body: {
+        name: 'Apple',
+        price: 199,
+        description: 'A delicious apple',
+        unitOfMeasure: 'kg',
+        sku: 'apple-sku'
+      },
+      getUrl: (address) => `/api/catalogs/${address}/products/apple-sku`
     },
     expects: {
-      success: true,
-      txId: 'mock_txid'
-    },
-    mocks: {
-      txid: 'mock_txid'
+      body: {
+        name: 'Apple',
+        price: 1.99,
+        description: 'A delicious apple',
+        unitOfMeasure: 'kg',
+        sku: 'apple-sku'
+      },
+      status: 200
     }
   }
 }
 
-exports.get = {
+exports.getBySku = {
   success: {
+    inserts: {
+      product: {
+        name: 'Pear',
+        price: 299,
+        description: 'A delicious pear',
+        unitOfMeasure: 'kg',
+        sku: 'pear-sku'
+      }
+    },
     inputs: {
-      id: '1'
+      getUrl: (address) => `/api/catalogs/${address}/products/pear-sku`
     },
     expects: {
-      id: '1',
-      name: 'Test Product',
-      price: '100',
-      description: 'A test product',
-      unitOfMeasure: 'piece'
-    },
-    mocks: {
-      decoded: [['Test Product', '100', 'A test product', 'piece']]
+      body: {
+        name: 'Pear',
+        price: 2.99,
+        description: 'A delicious pear',
+        unitOfMeasure: 'kg',
+        sku: 'pear-sku'
+      },
+      status: 200
     }
   }
 }

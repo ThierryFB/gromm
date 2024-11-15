@@ -1,76 +1,53 @@
 const request = require('supertest')
 const app = require('../../../src/index')
-const { Framework } = require('@vechain/connex-framework')
-const { Driver, SimpleNet } = require('@vechain/connex-driver')
-const testData = require('./product.routes.data')
+const { thorify } = require('thorify')
+const Web3 = require('web3')
+const mockDate = require('mockdate')
+const { waitForThor } = require('../../utils')
+const hre = require('hardhat')
+const catalogService = require('../../../src/catalog/catalog.service')
+const productService = require('../../../src/product/product.service')
 
-jest.mock('@vechain/connex-framework')
-jest.mock('@vechain/connex-driver')
+const testData = require('./product.routes.data')
+let catalogAddress
 
 describe('Product Routes', () => {
-  let mockConnex
-
-  beforeEach(() => {
-    mockConnex = {
-      thor: {
-        account: jest.fn().mockReturnThis(),
-        method: jest.fn().mockReturnThis(),
-        call: jest.fn()
-      },
-      vendor: {
-        sign: jest.fn().mockReturnThis(),
-        request: jest.fn()
-      }
-    }
-
-    Framework.mockImplementation(() => mockConnex)
-    Driver.mockImplementation(() => ({}))
-    SimpleNet.mockImplementation(() => ({}))
+  beforeAll(async () => {
+    mockDate.set('2024-07-09T00:17:00.000Z')
+    await hre.network.provider.send('evm_setNextBlockTimestamp', [new Date('2033-05-18T03:33:00.000Z').getTime() / 1000])
+    await hre.run('compile')
+    const web3 = thorify(new Web3(), process.env.THOR_URL || 'http://localhost:8669')
+    await waitForThor(web3)
+    ;({ address: catalogAddress } = await catalogService.create(testData.beforeAll.inserts.catalog))
   })
 
-  describe('POST /api/products', () => {
+  describe('PUT /api/catalogs/:address/products', () => {
     it('should create a new product', async () => {
-      const { inputs, expects, mocks } = testData.post.success
-
-      mockConnex.vendor.request.mockResolvedValue({ txid: mocks.txid })
+      const { inputs, expects } = testData.put.success
 
       const response = await request(app)
-        .post('/api/products')
-        .send(inputs.newProduct)
-        .expect(200)
+        .put(inputs.getUrl(catalogAddress))
+        .send(inputs.body)
 
-      expect(response.body).toEqual(expects)
+      if (response.error) console.debug('error: ', response.error)
+      expect(response.status).toBe(expects.status)
+      expect(response.body).toMatchObject(expects.body)
     })
   })
 
-  describe('GET /api/products/:id', () => {
+  describe('GET /api/catalogs/:address/products/:sku', () => {
     it('should return a product by id', async () => {
-      const { inputs, expects, mocks } = testData.get.success
+      const { inputs, expects, inserts } = testData.getBySku.success
 
-      mockConnex.thor.call.mockResolvedValue({
-        decoded: [mocks.decoded]
-      })
+      await productService.upsert({ catalogAddress, product: inserts.product })
 
       const response = await request(app)
-        .get(`/api/products/${inputs.id}`)
-        .expect(200)
+        .get(inputs.getUrl(catalogAddress))
 
-      expect(response.body).toEqual(expects)
-    })
-  })
+      if (response.error) console.debug('error: ', response.error)
 
-  describe('PUT /api/products/:id', () => {
-    it('should update a product', async () => {
-      const { inputs, expects, mocks } = testData.put.success
-
-      mockConnex.vendor.request.mockResolvedValue({ txid: mocks.txid })
-
-      const response = await request(app)
-        .put(`/api/products/${testData.get.success.inputs.id}`)
-        .send(inputs.updatedProduct)
-        .expect(200)
-
-      expect(response.body).toEqual(expects)
+      expect(response.status).toBe(expects.status)
+      expect(response.body).toMatchObject(expects.body)
     })
   })
 })

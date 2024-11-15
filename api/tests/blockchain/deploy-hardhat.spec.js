@@ -2,7 +2,7 @@ const { thorify } = require('thorify')
 const Web3 = require('web3')
 const mockDate = require('mockdate')
 const { waitForThor } = require('../utils')
-const { deploy } = require('../../blockchain/deploy')
+// const { deploy } = require('../../blockchain/deploy')
 const hre = require('hardhat')
 const testData = require('./deploy-hardhat.data')
 
@@ -71,5 +71,4 @@ describe('Contract Deployment', () => {
     const orderGotByOrderNumber = await catalogContract.getOrderByOrderNumber(1)
     expect(orderGotByOrderNumber).toMatchObject(expects.orderGotByOrderNumber)
   }, 60000)
-
 })
