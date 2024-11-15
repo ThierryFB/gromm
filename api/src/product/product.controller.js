@@ -9,7 +9,6 @@ exports.getBySku = asyncAction(async (req, res) => {
 
 exports.put = asyncAction(async (req, res) => {
   const { sku, address: catalogAddress } = req.params
-  console.debug('params', req.params)
   const { name, price, description, unitOfMeasure } = req.body
   const product = await productService.upsert({ catalogAddress, product: { sku, name, price, description, unitOfMeasure } })
   res.json(product)
