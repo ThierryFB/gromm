@@ -4,7 +4,7 @@ const { cleanStruct } = require('../utils')
 const upsert = async ({ catalogAddress, product }) => {
   const Catalog = await ethers.getContractFactory('Catalog')
   const catalogContract = await Catalog.attach(catalogAddress)
-  catalogContract.createProduct(product.name, product.price, product.description, product.unitOfMeasure, product.sku)
+  await catalogContract.createProduct(product.name, product.price, product.description, product.unitOfMeasure, product.sku)
   const upsertedProduct = await catalogContract.skuToProduct(product.sku)
   return cleanStruct({ solidityObject: upsertedProduct })
 }

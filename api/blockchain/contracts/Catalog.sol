@@ -41,6 +41,8 @@ contract Catalog {
     event ProductUpdated(string name, string _sku, uint256 price);
     event ProductCreated(uint id, string name, uint256 price, string description, string unitOfMeasure, string _sku);
 
+    event OrderCreated(uint indexed orderNumber);
+
     constructor(string memory _supplierName, string memory _catalogName) {
         supplier = Supplier(_supplierName);
         catalogName = _catalogName;
@@ -94,6 +96,7 @@ contract Catalog {
         }
 
         orderNumberToOrder[orderNumber] = newOrder;
+        emit OrderCreated(orderNumber);
     }
 
     function getOrderByOrderNumber(uint _orderNumber) public view returns (Order memory) {
