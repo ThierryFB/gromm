@@ -19,7 +19,7 @@ describe('Catalog Routes', () => {
   })
 
   describe('POST /api/catalogs', () => {
-    it('should create a new product', async () => {
+    it('should create a new catalog', async () => {
       const { inputs, expects } = testData.post.success
 
       const response = await request(app)
@@ -32,7 +32,7 @@ describe('Catalog Routes', () => {
   })
 
   describe('GET /api/catalogs/:id', () => {
-    it('should return a product by id', async () => {
+    it('should return a catalog by id', async () => {
       const { inputs, expects, inserts } = testData.getByAddress.success
 
       await catalogService.create(inserts.catalog)

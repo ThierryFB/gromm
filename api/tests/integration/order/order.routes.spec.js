@@ -23,7 +23,7 @@ describe('Order Routes', () => {
   })
 
   describe('POST /api/catalogs/:address/orders', () => {
-    it('should create a new product', async () => {
+    it('should create a new order', async () => {
       const { inputs, expects, inserts } = testData.post.success
       for (const product of inserts.products) {
         await productService.upsert({ catalogAddress, product })
@@ -38,7 +38,7 @@ describe('Order Routes', () => {
   })
 
   describe('GET /api/catalogs/:address/orders/:orderNumber', () => {
-    it('should return a product by id', async () => {
+    it('should return a order by id', async () => {
       const { inputs, expects, inserts } = testData.getByOrderNumber.success
 
       for (const product of inserts.products) {

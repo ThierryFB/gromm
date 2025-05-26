@@ -22,7 +22,7 @@ describe('Product Routes', () => {
   })
 
   describe('PUT /api/catalogs/:address/products', () => {
-    it('should create a new product', async () => {
+    it('should create a new product on a catalog', async () => {
       const { inputs, expects } = testData.put.success
 
       const response = await request(app)

@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: thor-node
+  namespace: vchain-staging
+spec:
+  serviceName: thor-node-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thor-node
+  template:
+    metadata:
+      labels:
+        app: thor-node
+    spec:
+      initContainers:
+      - name: fix-permissions
+        image: busybox:1.35
+        command: ['sh', '-c', 'chown -R 1000:1000 /thor-data && chmod -R 755 /thor-data']
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: thor-data
+          mountPath: /thor-data
+      containers:
+      - name: thor
+        image: vechain/thor:latest
+        ports:
+        - containerPort: 8669
+          name: api
+        - containerPort: 11235
+          name: p2p
+        args:
+          - "--network=$(NETWORK)"
+          - "--data-dir=/thor-data"
+          - "--api-addr=$(API_ADDR)"
+          - "--api-cors=$(API_CORS)"
+          - "--p2p-port=$(P2P_PORT)"
+          - "--nat=$(NAT)"
+          - "--verbosity=$(VERBOSITY)"
+          - "--max-peers=$(MAX_PEERS)"
+        env:
+        - name: NETWORK
+          valueFrom:
+            configMapKeyRef:
+              name: thor-config
+              key: network
+        - name: API_ADDR
+          valueFrom:
+            configMapKeyRef:
+              name: thor-config
+              key: api-addr
+        - name: API_CORS
+          valueFrom:
+            configMapKeyRef:
+              name: thor-config
+              key: api-cors
+        - name: P2P_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: thor-config
+              key: p2p-port
+        - name: NAT
+          valueFrom:
+            configMapKeyRef:
+              name: thor-config
+              key: nat
+        - name: VERBOSITY
+          valueFrom:
+            configMapKeyRef:
+              name: thor-config
+              key: verbosity
+        - name: MAX_PEERS
+          valueFrom:
+            configMapKeyRef:
+              name: thor-config
+              key: max-peers
+        volumeMounts:
+        - name: thor-data
+          mountPath: /thor-data
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "100m"
+          limits:
+            memory: "3Gi"
+        livenessProbe:
+          httpGet:
+            path: /blocks/best
+            port: 8669
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /blocks/best
+            port: 8669
+          initialDelaySeconds: 60
+          periodSeconds: 10
+      volumes:
+        - name: thor-data
+          persistentVolumeClaim:
+            claimName: vchain-thor-pvc

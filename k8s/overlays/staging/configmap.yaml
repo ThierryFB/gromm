@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: thor-config
+  namespace: vchain-staging
+data:
+  # Test network configuration
+  network: "test"
+  # API settings
+  api-addr: "0.0.0.0:8669"
+  api-cors: "*"
+  # P2P settings
+  p2p-port: "11235"
+  nat: "any"
+  # Other settings
+  verbosity: "3"
+  max-peers: "25"
