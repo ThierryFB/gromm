@@ -19,14 +19,14 @@ services:
 
   api:
     build:
-      context: ./api
+      context: .
       dockerfile: dev.Dockerfile
     ports:
       - "3000:3000"
     volumes:
-      - ./api/src:/app/src
-      - ./api/tests:/app/tests
-      - ./api/blockchain:/app/blockchain
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./blockchain:/app/blockchain
       - /app/node_modules
     environment:
       - THOR_URL=http://thor:8669

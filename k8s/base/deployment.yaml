@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: gromm-api
+spec:
+  selector:
+    matchLabels:
+      app: gromm-api
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: gromm-api
+    spec:
+      containers:
+      - name: gromm-api
+        env:
+        - name: THOR_URL
+          value: obiuspgsqldb
+        - name: PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: vchain-thor
+              key: private_key
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3200
+        readinessProbe:
+          tcpSocket:
+            port: 3200
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 3200
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "20m"
+          limits:
+            memory: "1Gi"
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: ghcr-registry
+status: {}

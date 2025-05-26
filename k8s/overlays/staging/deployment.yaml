@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gromm-api
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: gromm-api
+          image: ghcr.io/ThierryFB/gromm-api:staging
+          env:
+            - name: NODE_ENV
+              value: staging

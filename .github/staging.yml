@@ -1,4 +1,4 @@
-name: Build and deploy AKS - gromm-api
+name: Build and deploy - gromm-api
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
           uses: docker/build-push-action@v3
           with:
             context: .
-            file: ./api/Dockerfile
+            file: ./Dockerfile
             push: true
             tags: ghcr.io/${{ github.repository }}:staging
   
