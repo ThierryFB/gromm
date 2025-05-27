@@ -52,14 +52,14 @@ jobs:
       - name: Create or Replace Docker Registry Secret
         run: |
           kubectl create secret docker-registry ghcr-registry \
-          --docker-server=${{ secrets.DOCKER_SERVER }} \
-          --docker-username=${{ secrets.DOCKER_USERNAME }} \
-          --docker-email=${{ secrets.DOCKER_EMAIL }} \
+          --docker-server=${{ vars.DOCKER_SERVER }} \
+          --docker-username=${{ vars.DOCKER_USERNAME }} \
+          --docker-email=${{ vars.DOCKER_EMAIL }} \
           --docker-password=${{ secrets.GHCR_PAT }} \
           --namespace=$KUBE_NAMESPACE \
           -o yaml --dry-run=client | kubectl replace --force -f -
 
-      - name: Deploy API to AKS
+      - name: Deploy API to DOKS
         run: |
           kubectl -n $KUBE_NAMESPACE rollout restart deployment/$DEPLOYMENT_NAME
           kubectl -n $KUBE_NAMESPACE rollout status deployment/$DEPLOYMENT_NAME
