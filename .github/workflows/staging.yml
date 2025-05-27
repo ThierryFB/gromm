@@ -43,9 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Set up Kubectl
-        uses: azure/setup-kubectl@v1
-      
+
       - name: Decode and set KUBECONFIG
         run: |
           mkdir -p $HOME/.kube
