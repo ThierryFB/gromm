@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: gromm-api
-          image: ghcr.io/ThierryFB/gromm-api:staging
+          image: ghcr.io/thierryfb/gromm:staging
           env:
             - name: NODE_ENV
               value: staging

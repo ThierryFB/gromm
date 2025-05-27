@@ -10,3 +10,4 @@ namespace: vchain-staging
 
 patches:
   - path: ./statefulset.yaml
+  - path: ./deployment.yaml

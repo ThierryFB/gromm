@@ -12,6 +12,8 @@ COPY hardhat.config.js ./
 # Install dependencies
 RUN npm install
 
+RUN npx hardhat compile
+
 # Copy the rest of the application code
 COPY . .
 
