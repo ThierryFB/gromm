@@ -34,7 +34,7 @@ jobs:
             context: .
             file: ./Dockerfile
             push: true
-            tags: ghcr.io/${{ github.repository }}:staging
+            tags: ghcr.io/thierryfb/gromm:staging
   
         - name: Output image digest
           run: echo "The image digest is ${{ steps.build-and-push.outputs.digest }}"
