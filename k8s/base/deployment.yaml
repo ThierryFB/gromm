@@ -18,9 +18,9 @@ spec:
       - name: gromm-api
         env:
         - name: THOR_URL
-          value: https://rpc-testnet.vechain.energy/
+          value: https://testnet.veblocks.net
         - name: CHAIN_ID
-          value: 100010
+          value: "39"
         - name: PRIVATE_KEY
           valueFrom:
             secretKeyRef:
