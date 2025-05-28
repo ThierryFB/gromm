@@ -18,7 +18,7 @@ spec:
       - name: gromm-api
         env:
         - name: THOR_URL
-          value: http://thor-node-service:8669
+          value: https://testnet.veblocks.net
         - name: PRIVATE_KEY
           valueFrom:
             secretKeyRef:
