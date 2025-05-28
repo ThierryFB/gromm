@@ -2,6 +2,7 @@ require("@nomiclabs/hardhat-ethers");
 
 module.exports = {
   solidity: "0.8.26",
+  defaultNetwork: "vechain",
   paths: {
     sources: "./blockchain/contracts",
     tests: "./tests",
@@ -10,11 +11,9 @@ module.exports = {
   },
   networks: {
     vechain: {
-      url: process.env.THOR_URL || "https://testnet.veblocks.net",
+      url: process.env.THOR_URL || "http://thor:8669",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 39, // VeChain Thor chainId,
-      gas: 10000000,
-      gasPrice: 1000000000000000, // 1000 wei
     }
   }
 };

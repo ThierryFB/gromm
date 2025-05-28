@@ -35,6 +35,8 @@ jobs:
             file: ./Dockerfile
             push: true
             tags: ghcr.io/thierryfb/gromm:staging
+            build-args: |
+              THOR_URL=${{ vars.THOR_URL }}
   
         - name: Output image digest
           run: echo "The image digest is ${{ steps.build-and-push.outputs.digest }}"

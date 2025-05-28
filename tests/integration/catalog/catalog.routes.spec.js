@@ -14,18 +14,8 @@ describe('Catalog Routes', () => {
     mockDate.set('2024-07-09T00:17:00.000Z')
     await hre.network.provider.send('evm_setNextBlockTimestamp', [new Date('2033-05-18T03:33:00.000Z').getTime() / 1000])
     await hre.run('compile')
-This line `await hre.run('compile')` is using Hardhat (a development environment for Ethereum software) to compile smart contracts in the project.
-
-When this command is executed, it:
-1. Looks for all Solidity smart contract files in the project
-2. Compiles them using the Solidity compiler (solc)
-3. Generates the necessary artifacts (ABIs and bytecode) needed to interact with the contracts
-4. Waits for the compilation to complete (due to the `await`)
-
-This is typically necessary in tests that interact with smart contracts to ensure you're working with the latest version of the compiled contracts.
-
-Would you like me to explain any specific aspect of this in more detail?
-    const web3 = thorify(new Web3(), process.env.THOR_URL || 'http://localhost:8669')
+    console.debug('THOR_URL: ', process.env.THOR_URL)
+    const web3 = thorify(new Web3(), process.env.THOR_URL || 'http://thor:8669')
     await waitForThor(web3)
   })
 

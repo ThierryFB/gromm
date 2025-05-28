@@ -1,6 +1,8 @@
 const { ethers } = require('hardhat')
 
 const create = async ({ supplier, name }) => {
+  const network = await ethers.provider.getNetwork()
+  console.log("network:", network)
   const Catalog = await ethers.getContractFactory('Catalog')
   const catalogContract = await Catalog.deploy(supplier.name, name)
   return {

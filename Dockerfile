@@ -1,5 +1,9 @@
 FROM node:18
 
+ARG THOR_URL
+
+ENV THOR_URL=${THOR_URL}
+
 # Set the working directory
 WORKDIR /app
 
