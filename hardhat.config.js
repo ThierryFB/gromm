@@ -11,7 +11,7 @@ module.exports = {
   },
   networks: {
     vechain: {
-      url: process.env.THOR_URL || "http://thor:8669",
+      url: process.env.THOR_URL || "https://testnet.veblocks.net/",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 39, // VeChain Thor chainId,
     }
