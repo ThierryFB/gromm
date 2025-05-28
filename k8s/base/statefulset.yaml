@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: thor-node
-  namespace: vchain-staging
 spec:
   serviceName: thor-node-service
   replicas: 1

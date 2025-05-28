@@ -1,19 +1,18 @@
 FROM node:18
 
+ARG THOR_URL
+
+ENV THOR_URL=${THOR_URL}
+
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Copy the Hardhat configuration file
-COPY hardhat.config.js ./
+COPY . .
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
-COPY . .
+RUN npx hardhat compile
 
 # Set the default command to start the application
 CMD ["npm", "run", "start"]

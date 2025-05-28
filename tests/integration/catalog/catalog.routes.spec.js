@@ -14,7 +14,8 @@ describe('Catalog Routes', () => {
     mockDate.set('2024-07-09T00:17:00.000Z')
     await hre.network.provider.send('evm_setNextBlockTimestamp', [new Date('2033-05-18T03:33:00.000Z').getTime() / 1000])
     await hre.run('compile')
-    const web3 = thorify(new Web3(), process.env.THOR_URL || 'http://localhost:8669')
+    console.debug('THOR_URL: ', process.env.THOR_URL)
+    const web3 = thorify(new Web3(), process.env.THOR_URL || 'http://thor:8669')
     await waitForThor(web3)
   })
 
