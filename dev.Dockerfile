@@ -16,7 +16,7 @@ RUN npm install
 COPY . .
 
 # Compile the contracts
-# RUN npx hardhat compile
+RUN npx hardhat compile
 
 # Set the default command to start the application
 CMD ["npm", "start"]
