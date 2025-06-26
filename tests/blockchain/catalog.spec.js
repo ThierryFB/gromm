@@ -2,22 +2,33 @@ const { thorify } = require('thorify')
 const Web3 = require('web3')
 const mockDate = require('mockdate')
 const { waitForThor } = require('../utils')
-const hre = require('hardhat')
+const ContractFactory = require('../../src/utils/contract.factory')
+const { ethers } = require('ethers')
 const testData = require('./catalog.data')
 
 describe('Contract Deployment', () => {
   let web3
   let catalogContract
-  let Catalog
+  let contractFactory
 
   beforeAll(async () => {
     mockDate.set('2024-07-09T00:17:00.000Z')
-    await hre.network.provider.send('evm_setNextBlockTimestamp', [new Date('2033-05-18T03:33:00.000Z').getTime() / 1000])
-    await hre.run('compile')
+    
+    // Initialize provider and signer
+    const provider = new ethers.providers.JsonRpcProvider(
+      process.env.THOR_URL || 'http://thor:8669'
+    )
+    const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
+    contractFactory = new ContractFactory(provider, signer)
+    
+    // Initialize Web3 for Thor
     web3 = thorify(new Web3(), process.env.THOR_URL || 'http://localhost:8669')
     await waitForThor(web3)
-    Catalog = await hre.ethers.getContractFactory('Catalog')
-    catalogContract = await Catalog.deploy('Supplier 1', 'Catalog 1')
+    
+    // Deploy contract using ContractFactory
+    const deployment = await contractFactory.deployCatalog('Supplier 1', 'Catalog 1')
+    catalogContract = deployment.contract
+    
     console.debug('first address: ', catalogContract.address)
     console.debug('owner: ', await catalogContract.owner())
   }, 60000)
